@@ -9,6 +9,7 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.urlencoded({ extended: false }));
 
 // Connexion à la base de donnée PostgreSQL
 const pool = new Pool({
@@ -85,5 +86,30 @@ app.get("/livres", (req, res) => {
       return console.error(err.message);
     }
     res.render("livres", { model: result.rows });
+  });
+});
+
+// GET /edit/5
+app.get("/edit/:id", (req, res) => {
+  const id = req.params.id;
+  const sql = "SELECT * FROM Livres WHERE Livre_ID = $1";
+  pool.query(sql, [id], (err, result) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    res.render("edit", { model: result.rows[0] });
+  });
+});
+
+// POST /edit/5
+app.post("/edit/:id", (req, res) => {
+  const id = req.params.id;
+  const book = [req.body.titre, req.body.auteur, req.body.commentaires, id];
+  const sql = "UPDATE Livres SET Titre = $1, Auteur = $2, Commentaires = $3 WHERE (Livre_ID = $4)";
+  pool.query(sql, book, (err, result) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    res.redirect("/livres");
   });
 });
