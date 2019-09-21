@@ -130,3 +130,27 @@ app.post("/edit/:id", (req, res) => {
     res.redirect("/livres");
   });
 });
+
+// GET /delete/5
+app.get("/delete/:id", (req, res) => {
+  const id = req.params.id;
+  const sql = "SELECT * FROM Livres WHERE Livre_ID = $1";
+  pool.query(sql, [id], (err, result) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    res.render("delete", { model: result.rows[0] });
+  });
+});
+
+// POST /delete/5
+app.post("/delete/:id", (req, res) => {
+  const id = req.params.id;
+  const sql = "DELETE FROM Livres WHERE Livre_ID = $1";
+  pool.query(sql, [id], (err, result) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    res.redirect("/livres");
+  });
+});
