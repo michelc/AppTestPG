@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+const { Pool } = require("pg");
 
 // Création du serveur Express
 const app = express();
@@ -8,6 +9,16 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
+
+// Connexion à la base de donnée PostgreSQL
+const pool = new Pool({
+  user: "mystere",
+  host: "xxxxx.elephantsql.com",
+  database: "mystere",
+  password: "untrucsecretquinarienafaireici",
+  port: 5432
+});
+console.log("Connexion réussie à la base de données");
 
 // Démarrage du serveur
 app.listen(3000, () => {
