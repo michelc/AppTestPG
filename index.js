@@ -20,6 +20,20 @@ const pool = new Pool({
 });
 console.log("Connexion réussie à la base de données");
 
+// Création de la table Livres (Livre_ID, Titre, Auteur, Commentaires)
+const sql_create = `CREATE TABLE IF NOT EXISTS Livres (
+  Livre_ID SERIAL PRIMARY KEY,
+  Titre VARCHAR(100) NOT NULL,
+  Auteur VARCHAR(100) NOT NULL,
+  Commentaires TEXT
+);`;
+pool.query(sql_create, [], (err, result) => {
+  if (err) {
+    return console.error(err.message);
+  }
+  console.log("Création réussie de la table 'Livres'");
+});
+
 // Démarrage du serveur
 app.listen(3000, () => {
   console.log("Serveur démarré (http://localhost:3000/) !");
